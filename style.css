@@ -136,12 +136,13 @@
     .game-area {
       width: min(95vw, 22rem);
       height: min(75vh, 34rem);
-      border-width: 1rem;
+      border-width: 0.5rem;
     }
 
     .game-info {
       padding: 0.8rem 0;
       font-size: 0.95rem;
+      color: #f1c40f;
     }
 
     .net {

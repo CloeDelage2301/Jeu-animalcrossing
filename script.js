@@ -57,11 +57,11 @@ gameArea.addEventListener('touchmove', (e) => {
     setNetPosition(getNetXFromClientX(touch.clientX));
 }, { passive: false });
 
-// Gestion curseur
+
 gameArea.onmouseenter = () => gameActive && (gameArea.style.cursor = 'none');
 gameArea.onmouseleave = () => (gameArea.style.cursor = 'default');
 
-// Mouvement horizontal
+
 gameArea.onmousemove = (e) => {
     if (!gameActive) return;
     const rect = gameArea.getBoundingClientRect();
@@ -92,11 +92,9 @@ function createItem() {
         pos += (3 + score * 0.1);
         item.style.top = pos + 'px';
 
-        // COLLISION RÉDUITE (Précision accrue)
         const r = item.getBoundingClientRect();
         const n = net.getBoundingClientRect();
 
-        // On réduit les marges de collision de 15px de chaque côté
         const padding = 15;
         if (r.bottom > n.top + 5 && r.top < n.bottom - 20 &&
             r.left + padding < n.right - padding &&
@@ -127,14 +125,13 @@ function endGame(win) {
     gameArea.style.cursor = 'default';
 
     if (win) {
-        // Choix d'un code différent du précédent
         let availableCodes = promoCodes.filter(c => c !== lastPromo);
         let newPromo = availableCodes[Math.floor(Math.random() * availableCodes.length)];
 
         promoCodeEl.innerText = newPromo;
         document.querySelector('.promo-container').style.display = 'block';
-        localStorage.setItem('lastPromo', newPromo); // Sauvegarde pour la prochaine fois
-    }
+        localStorage.setItem('lastPromo', newPromo); 
+        }
 }
 
 setInterval(createItem, 900);
