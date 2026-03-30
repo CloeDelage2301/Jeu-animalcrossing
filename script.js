@@ -1,125 +1,118 @@
-const gameArea = document.getElementById('game-area');
-const scoreEl = document.getElementById('score');
-const livesEl = document.getElementById('lives');
-const net = document.getElementById('net');
-const gameOverScreen = document.getElementById('game-over');
-const promoCodeEl = document.getElementById('promo-code');
 
-let score = 0;
-let lives = 3;
-let gameActive = true;
-let lastPromo = localStorage.getItem('lastPromo') || "";
+        const gameArea = document.getElementById('game-area');
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const net = document.getElementById('net');
+        const gameOverScreen = document.getElementById('game-over');
+        const promoCodeEl = document.getElementById('promo-code');
+        
+        let score = 0;
+        let lives = 3;
+        let gameActive = true;
+        let lastPromo = localStorage.getItem('lastPromo') || "";
+        const promoCodes = ["Ile20", "New26", "Filet14"];
 
-const promoCodes = ["Ile20", "New26", "Filet14"];
+        // --- MOUVEMENT ---
+        function setNetX(x) {
+            if (!gameActive) return;
+            let netX = x;
+            if (netX < 0) netX = 0;
+            if (netX > 220) netX = 220;
+            net.style.left = netX + 'px';
+        }
 
-// --- Utilitaire : largeur dynamique de la zone de jeu ---
-function getGameWidth() {
-  return gameArea.getBoundingClientRect().width;
-}
-function getNetWidth() {
-  return net.getBoundingClientRect().width;
-}
+        // PC
+        gameArea.onmousemove = (e) => {
+            const rect = gameArea.getBoundingClientRect();
+            setNetX((e.clientX - rect.left) - 50);
+        };
 
-// --- Curseur souris ---
-gameArea.onmouseenter = () => gameActive && (gameArea.style.cursor = 'none');
-gameArea.onmouseleave = () => (gameArea.style.cursor = 'default');
+        // MOBILE (Flèches)
+        let moveInterval;
+        function startMove(dir) {
+            if(!gameActive) return;
+            moveInterval = setInterval(() => {
+                let currentX = parseInt(net.style.left) || 110;
+                setNetX(currentX + (dir * 10));
+            }, 30);
+        }
+        function stopMove() { clearInterval(moveInterval); }
 
-// --- Déplacement souris ---
-gameArea.onmousemove = (e) => {
-  if (!gameActive) return;
-  const rect = gameArea.getBoundingClientRect();
-  const maxX = getGameWidth() - getNetWidth();
-  let netX = (e.clientX - rect.left) - getNetWidth() / 2;
-  netX = Math.max(0, Math.min(netX, maxX));
-  net.style.left = netX + 'px';
-};
+        document.getElementById('left-btn').ontouchstart = () => startMove(-1);
+        document.getElementById('right-btn').ontouchstart = () => startMove(1);
+        document.getElementById('left-btn').ontouchend = stopMove;
+        document.getElementById('right-btn').ontouchend = stopMove;
 
-// --- Déplacement tactile (doigt) ---
-gameArea.addEventListener('touchmove', (e) => {
-  if (!gameActive) return;
-  e.preventDefault(); // empêche le scroll de la page
-  const touch = e.touches[0];
-  const rect = gameArea.getBoundingClientRect();
-  const maxX = getGameWidth() - getNetWidth();
-  let netX = (touch.clientX - rect.left) - getNetWidth() / 2;
-  netX = Math.max(0, Math.min(netX, maxX));
-  net.style.left = netX + 'px';
-}, { passive: false });
+        // Gestion curseur
+        gameArea.onmouseenter = () => gameActive && (gameArea.style.cursor = 'none');
+        gameArea.onmouseleave = () => (gameArea.style.cursor = 'default');
 
-gameArea.addEventListener('touchstart', (e) => {
-  if (!gameActive) return;
-  e.preventDefault();
-  const touch = e.touches[0];
-  const rect = gameArea.getBoundingClientRect();
-  const maxX = getGameWidth() - getNetWidth();
-  let netX = (touch.clientX - rect.left) - getNetWidth() / 2;
-  netX = Math.max(0, Math.min(netX, maxX));
-  net.style.left = netX + 'px';
-}, { passive: false });
+        function createItem() {
+            if (!gameActive) return;
 
-function createItem() {
-  if (!gameActive) return;
+            const item = document.createElement('img');
+            const isClochette = Math.random() > 0.4;
+            item.src = isClochette ? 'cochette.png' : 'ruche d abeille.png';
+            item.className = 'item';
+            item.style.left = Math.random() * 270 + 'px';
+            item.style.top = '-50px';
+            gameArea.appendChild(item);
 
-  const item = document.createElement('img');
-  const isClochette = Math.random() > 0.4;
-  item.src = isClochette ? 'cochette.png' : 'ruche d abeille.png';
-  item.className = 'item';
+            let pos = -50;
+            const fall = setInterval(() => {
+                if (!gameActive) { clearInterval(fall); item.remove(); return; }
 
-  // Position horizontale responsive (basée sur la largeur réelle de la zone)
-  const areaWidth = getGameWidth();
-  const itemWidth = 50; // largeur approximative de l'item
-  item.style.left = Math.random() * (areaWidth - itemWidth) + 'px';
-  item.style.top = '-50px';
-  gameArea.appendChild(item);
+                pos += (3 + score * 0.1);
+                item.style.top = pos + 'px';
 
-  let pos = -50;
-  const fall = setInterval(() => {
-    if (!gameActive) { clearInterval(fall); item.remove(); return; }
+                const r = item.getBoundingClientRect();
+                const n = net.getBoundingClientRect();
+                const padding = 15;
 
-    pos += (3 + score * 0.1);
-    item.style.top = pos + 'px';
+                if (r.bottom > n.top + 5 && r.top < n.bottom - 20 &&
+                    r.left + padding < n.right - padding &&
+                    r.right - padding > n.left + padding) {
 
-    const r = item.getBoundingClientRect();
-    const n = net.getBoundingClientRect();
+                    if (isClochette) {
+                        score++;
+                        scoreEl.innerText = score;
+                        if (score >= 15) endGame(true);
+                    } else {
+                        lives--;
+                        livesEl.innerText = lives;
+                        if (lives <= 0) endGame(false);
+                    }
+                    clearInterval(fall);
+                    item.remove();
+                }
 
-    const padding = 15;
-    if (r.bottom > n.top + 5 && r.top < n.bottom - 20 &&
-      r.left + padding < n.right - padding &&
-      r.right - padding > n.left + padding) {
+                if (pos > 480) { clearInterval(fall); item.remove(); }
+            }, 20);
+        }
 
-      if (isClochette) {
-        score++;
-        scoreEl.innerText = score;
-        if (score >= 15) endGame(true);
-      } else {
-        lives--;
-        livesEl.innerText = lives;
-        if (lives <= 0) endGame(false);
-      }
-      clearInterval(fall);
-      item.remove();
-    }
+        function endGame(win) {
+            gameActive = false;
+            gameOverScreen.classList.add('visible');
+            document.getElementById('status-text').innerText = win ? "Gagné ! 🎉" : "Perdu... 🐝";
+            document.getElementById('final-score').innerText = score;
+            gameArea.style.cursor = 'default';
 
-    // Hauteur responsive
-    const areaHeight = gameArea.getBoundingClientRect().height;
-    if (pos > areaHeight + 10) { clearInterval(fall); item.remove(); }
-  }, 20);
-}
+            if (win) {
+                let availableCodes = promoCodes.filter(c => c !== lastPromo);
+                let newPromo = availableCodes[Math.floor(Math.random() * availableCodes.length)];
+                promoCodeEl.innerText = newPromo;
+                document.getElementById('promo-container').style.display = 'block';
+                localStorage.setItem('lastPromo', newPromo);
+            }
+        }
 
-function endGame(win) {
-  gameActive = false;
-  gameOverScreen.classList.add('visible');
-  document.getElementById('status-text').innerText = win ? "Gagné ! " : "Perdu... ";
-  document.getElementById('final-score').innerText = score;
-  gameArea.style.cursor = 'default';
+        function copyCode() {
+            const code = promoCodeEl.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.innerText = "Copié !";
+                setTimeout(() => btn.innerText = "Copier le code", 2000);
+            });
+        }
 
-  if (win) {
-    let availableCodes = promoCodes.filter(c => c !== lastPromo);
-    let newPromo = availableCodes[Math.floor(Math.random() * availableCodes.length)];
-    promoCodeEl.innerText = newPromo;
-    document.getElementById('promo-container').style.display = 'block';
-    localStorage.setItem('lastPromo', newPromo);
-  }
-}
-
-setInterval(createItem, 900);
+        setInterval(createItem, 900);
