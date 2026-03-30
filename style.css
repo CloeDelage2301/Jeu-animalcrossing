@@ -10,50 +10,50 @@
     overflow: hidden;
   }
 
-  #game-area {
-    width: 320px;
-    height: 480px;
+  .game-area {
+    width: 20rem;
+    height: 30rem;
     background-color: #78c0d0;
     position: relative;
     overflow: hidden;
-    border: 6px solid #fff;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    border: 0.5rem solid #fff;
+    border-radius: 1rem;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.8);
     cursor: none;
   }
 
-  #game-info {
+  .game-info {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     background: rgba(0, 0, 0, 0.6);
     color: white;
-    padding: 8px 0;
+    padding: 1rem 0;
     text-align: center;
-    font-size: 16px;
+    font-size: 1rem;
     z-index: 10;
   }
 
   .item {
     position: absolute;
-    width: 45px;
+    width: 3rem;
     /* Taille ajustée pour la précision */
     user-select: none;
     z-index: 5;
   }
 
-  #net {
+  .net {
     position: absolute;
-    bottom: 15px;
-    left: 110px;
-    width: 100px;
+    bottom: 1rem;
+    left: 7rem;
+    width: 6rem;
     height: auto;
     z-index: 100;
     pointer-events: none;
   }
 
-  #game-over {
+  .game-over {
     display: none;
     position: absolute;
     top: 0;
@@ -67,34 +67,45 @@
     align-items: center;
     z-index: 1000;
     text-align: center;
-    padding: 20px;
+    padding: 0.5rem;
     box-sizing: border-box;
   }
 
-  #game-over.visible {
+  .game-over.visible {
     display: flex;
   }
 
-  #promo-container {
-    margin: 15px 0;
-    padding: 10px;
-    border: 2px dashed #f1c40f;
+  .promo-container {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border: 0.2rem solid #f1c40f;
     background: rgba(241, 196, 15, 0.1);
   }
 
-  #promo-code {
-    font-size: 24px;
+  .promo-code {
+    font-size: 2rem;
     font-weight: bold;
     color: #f1c40f;
   }
 
   button {
-    padding: 12px 24px;
-    font-size: 18px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
     cursor: pointer;
     background: #f1c40f;
     border: none;
-    border-radius: 25px;
+    border-radius: 2rem;
     font-weight: bold;
+
   }
 
+  .copy-btn {
+    padding: 1rem 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    background: #ffffff;
+    border-radius: 1.5rem;
+    cursor: pointer;
+   
+  }

@@ -10,19 +10,20 @@
 
 <body>
 
-  <div id="game-area">
-    <div id="game-info">
-      Clochettes : <span id="score">0</span>/15 | Vies : <span id="lives">3</span>
+  <div class="game-area">
+    <div class="game-info">
+      Clochettes : <span class="score">0</span>/15 | Vies : <span class="lives">3</span>
     </div>
 
-    <img src="filet.jpg" id="net" alt="Filet">
+    <img src="filet.png" class="net" alt="Filet">
 
-    <div id="game-over">
-      <h2 id="status-text"></h2>
-      <p>Score : <span id="final-score">0</span></p>
-      <div id="promo-container" style="display:none;">
+    <div class="game-over">
+      <h2 class="status-text"></h2>
+      <p>Score : <span class="final-score">0</span></p>
+      <div class="promo-container" style="display:none;">
         <p>Ton code de réduction :</p>
-        <div id="promo-code"></div>
+        <div class="promo-code"></div>
+        <button class="copy-btn" onclick="copyCode()">Copier</button>
       </div>
       <button onclick="location.reload()">Rejouer</button>
     </div>
