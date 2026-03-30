@@ -20,7 +20,7 @@
     background-color: #78c0d0;
     position: relative;
     overflow: hidden;
-    border: 1rem solid #fff;
+    border: 0.2rem solid #ffffff;
     border-radius: 1rem;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.8);
     cursor: none;
@@ -142,7 +142,7 @@
     .game-info {
       padding: 0.8rem 0;
       font-size: 0.95rem;
-      color: #f1c40f;
+      
     }
 
     .net {
