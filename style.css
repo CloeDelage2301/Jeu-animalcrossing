@@ -137,6 +137,7 @@
       width: min(95vw, 22rem);
       height: min(75vh, 34rem);
       border-width: 0.5rem;
+
     }
 
     .game-info {
@@ -160,5 +161,9 @@
 
     .promo-code {
       font-size: 1.8rem;
+    }
+
+    button{
+      color : #333;
     }
   }
