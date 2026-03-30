@@ -1,151 +1,99 @@
- body {
-   margin: 0;
-   padding: 0;
-   background-color: #333;
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
-   height: 100vh;
-   font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
-   overflow: hidden;
-   touch-action: none;
-   /* Empêche le zoom/scroll accidentel sur tel */
- }
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  overflow: hidden;
+}
 
- #game-area {
-   width: 320px;
-   height: 480px;
-   background-color: #78c0d0;
-   position: relative;
-   overflow: hidden;
-   border: 6px solid #fff;
-   border-radius: 15px;
-   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-   cursor: none;
- }
+#game-area {
+  width: 320px;
+  height: 480px;
+  background-color: #78c0d0;
+  position: relative;
+  overflow: hidden;
+  border: 6px solid #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  cursor: none;
+}
 
- #game-info {
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   background: rgba(0, 0, 0, 0.6);
-   color: white;
-   padding: 8px 0;
-   text-align: center;
-   font-size: 16px;
-   z-index: 10;
- }
+#game-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 16px;
+  z-index: 10;
+}
 
- .item {
-   position: absolute;
-   width: 45px;
-   user-select: none;
-   z-index: 5;
- }
+.item {
+  position: absolute;
+  width: 45px;
+  /* Taille ajustée pour la précision */
+  user-select: none;
+  z-index: 5;
+}
 
- #net {
-   position: absolute;
-   bottom: 15px;
-   left: 110px;
-   width: 100px;
-   height: auto;
-   z-index: 100;
-   pointer-events: none;
- }
+#net {
+  position: absolute;
+  bottom: 15px;
+  left: 110px;
+  width: 100px;
+  height: auto;
+  z-index: 100;
+  pointer-events: none;
+}
 
- /* Interface de fin de jeu */
- #game-over {
-   display: none;
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background: rgba(0, 0, 0, 0.9);
-   color: white;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
-   z-index: 1000;
-   text-align: center;
-   padding: 20px;
-   box-sizing: border-box;
- }
+#game-over {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
- #game-over.visible {
-   display: flex;
- }
+#game-over.visible {
+  display: flex;
+}
 
- /* Zone Code Promo */
- #promo-container {
-   margin: 15px 0;
-   padding: 15px;
-   border: 2px dashed #f1c40f;
-   background: rgba(241, 196, 15, 0.1);
-   border-radius: 10px;
- }
+#promo-container {
+  margin: 15px 0;
+  padding: 10px;
+  border: 2px dashed #f1c40f;
+  background: rgba(241, 196, 15, 0.1);
+}
 
- .promo-row {
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   gap: 10px;
-   margin-top: 10px;
- }
+#promo-code {
+  font-size: 24px;
+  font-weight: bold;
+  color: #f1c40f;
+}
 
- #promo-code {
-   font-size: 24px;
-   font-weight: bold;
-   color: #f1c40f;
- }
-
- /* Boutons */
- .btn {
-   padding: 12px 24px;
-   font-size: 16px;
-   cursor: pointer;
-   background: #f1c40f;
-   border: none;
-   border-radius: 25px;
-   font-weight: bold;
-   color: #333;
-   margin-top: 10px;
- }
-
- #copy-btn {
-   padding: 5px 12px;
-   font-size: 12px;
-   background: #fff;
-   border-radius: 5px;
-   cursor: pointer;
-   border: 1px solid #ccc;
- }
-
- /* Flèches pour Mobile */
- #mobile-controls {
-   display: flex;
-   width: 320px;
-   justify-content: space-between;
-   margin-top: 15px;
- }
-
- .arrow {
-   width: 70px;
-   height: 70px;
-   background: #eee;
-   border-radius: 50%;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   font-size: 30px;
-   user-select: none;
-   -webkit-user-select: none;
-   box-shadow: 0 4px #999;
- }
-
- .arrow:active {
-   transform: translateY(2px);
-   box-shadow: 0 2px #666;
- }
+button {
+  padding: 12px 24px;
+  font-size: 18px;
+  cursor: pointer;
+  background: #f1c40f;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+}
