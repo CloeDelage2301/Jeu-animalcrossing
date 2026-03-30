@@ -12,43 +12,40 @@
         let lastPromo = localStorage.getItem('lastPromo') || "";
         const promoCodes = ["Ile20", "New26", "Filet14"];
 
-        // --- MOUVEMENT SOURIS (PC) ---
-        gameArea.onmousemove = (e) => {
+        // --- MOUVEMENT ---
+        function setNetX(x) {
             if (!gameActive) return;
+            let netX = x;
+            if (netX < 0) netX = 0;
+            if (netX > 220) netX = 220;
+            net.style.left = netX + 'px';
+        }
+
+        // PC
+        gameArea.onmousemove = (e) => {
             const rect = gameArea.getBoundingClientRect();
-            updateNetPos((e.clientX - rect.left) - 50);
+            setNetX((e.clientX - rect.left) - 50);
         };
 
-        // --- MOUVEMENT FLÈCHES (TEL) ---
+        // MOBILE (Flèches)
         let moveInterval;
-        function updateNetPos(x) {
-            if (x < 0) x = 0;
-            if (x > 220) x = 220;
-            net.style.left = x + 'px';
-        }
-
-        function startMoving(dir) {
-            if (!gameActive) return;
+        function startMove(dir) {
+            if(!gameActive) return;
             moveInterval = setInterval(() => {
                 let currentX = parseInt(net.style.left) || 110;
-                updateNetPos(currentX + (dir * 8));
-            }, 20);
+                setNetX(currentX + (dir * 10));
+            }, 30);
         }
+        function stopMove() { clearInterval(moveInterval); }
 
-        function stopMoving() {
-            clearInterval(moveInterval);
-        }
+        document.getElementById('left-btn').ontouchstart = () => startMove(-1);
+        document.getElementById('right-btn').ontouchstart = () => startMove(1);
+        document.getElementById('left-btn').ontouchend = stopMove;
+        document.getElementById('right-btn').ontouchend = stopMove;
 
-        // Événements tactiles pour les flèches
-        document.getElementById('left-arrow').addEventListener('touchstart', (e) => { e.preventDefault(); startMoving(-1); });
-        document.getElementById('right-arrow').addEventListener('touchstart', (e) => { e.preventDefault(); startMoving(1); });
-        document.getElementById('left-arrow').addEventListener('touchend', stopMoving);
-        document.getElementById('right-arrow').addEventListener('touchend', stopMoving);
-        
-        // Support souris pour les flèches aussi
-        document.getElementById('left-arrow').onmousedown = () => startMoving(-1);
-        document.getElementById('right-arrow').onmousedown = () => startMoving(1);
-        window.onmouseup = stopMoving;
+        // Gestion curseur
+        gameArea.onmouseenter = () => gameActive && (gameArea.style.cursor = 'none');
+        gameArea.onmouseleave = () => (gameArea.style.cursor = 'default');
 
         function createItem() {
             if (!gameActive) return;
@@ -65,8 +62,7 @@
             const fall = setInterval(() => {
                 if (!gameActive) { clearInterval(fall); item.remove(); return; }
 
-                // Vitesse réduite (2.5 au lieu de 3) pour que ce soit moins dur
-                pos += (2.5 + score * 0.08); 
+                pos += (3 + score * 0.1);
                 item.style.top = pos + 'px';
 
                 const r = item.getBoundingClientRect();
@@ -110,16 +106,13 @@
             }
         }
 
-        // Fonction pour copier le code
         function copyCode() {
             const code = promoCodeEl.innerText;
             navigator.clipboard.writeText(code).then(() => {
                 const btn = document.getElementById('copy-btn');
                 btn.innerText = "Copié !";
-                setTimeout(() => btn.innerText = "Copier", 2000);
-            }).catch(err => {
-                alert("Erreur lors de la copie : " + code);
+                setTimeout(() => btn.innerText = "Copier le code", 2000);
             });
         }
 
-        setInterval(createItem, 1000); // Un peu plus lent (1000ms au lieu de 900ms)
+        setInterval(createItem, 900);
