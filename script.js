@@ -6,6 +6,8 @@ const livesEl = document.querySelector('.lives');
 const net = document.querySelector('.net');
 const gameOverScreen = document.querySelector('.game-over');
 const promoCodeEl = document.querySelector('.promo-code');
+const leftBtn = document.querySelector('.left-btn');
+const rightBtn = document.querySelector('.right-btn');
 
 let score = 0;
 let lives = 3;
@@ -13,6 +15,47 @@ let gameActive = true;
 let lastPromo = localStorage.getItem('lastPromo') || "";
 
 const promoCodes = ["Ile20", "New26", "Filet14"];
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+function setNetPosition(x) {
+    const areaRect = gameArea.getBoundingClientRect();
+    const netRect = net.getBoundingClientRect();
+    const maxLeft = Math.max(0, areaRect.width - netRect.width);
+    net.style.left = clamp(x, 0, maxLeft) + 'px';
+}
+
+function getNetXFromClientX(clientX) {
+    const rect = gameArea.getBoundingClientRect();
+    const netRect = net.getBoundingClientRect();
+    const netHalfWidth = netRect.width / 2;
+    let netX = clientX - rect.left - netHalfWidth;
+    return clamp(netX, 0, Math.max(0, rect.width - netRect.width));
+}
+
+function moveNetBy(delta) {
+    const currentLeft = parseFloat(window.getComputedStyle(net).left) || 0;
+    setNetPosition(currentLeft + delta);
+}
+
+leftBtn?.addEventListener('click', () => moveNetBy(-20));
+rightBtn?.addEventListener('click', () => moveNetBy(20));
+
+gameArea.addEventListener('mouseenter', () => gameActive && (gameArea.style.cursor = 'none'));
+gameArea.addEventListener('mouseleave', () => (gameArea.style.cursor = 'default'));
+gameArea.addEventListener('mousemove', (e) => {
+    if (!gameActive) return;
+    setNetPosition(getNetXFromClientX(e.clientX));
+});
+gameArea.addEventListener('touchmove', (e) => {
+    if (!gameActive) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    e.preventDefault();
+    setNetPosition(getNetXFromClientX(touch.clientX));
+}, { passive: false });
 
 // Gestion curseur
 gameArea.onmouseenter = () => gameActive && (gameArea.style.cursor = 'none');
@@ -35,9 +78,12 @@ function createItem() {
     const isClochette = Math.random() > 0.4; // Un peu plus de ruches pour le challenge
     item.src = isClochette ? 'cochette.png' : 'ruche d abeille.png';
     item.className = 'item';
-    item.style.left = Math.random() * 270 + 'px';
-    item.style.top = '-50px';
     gameArea.appendChild(item);
+
+    const itemWidth = item.getBoundingClientRect().width || 48;
+    const maxLeft = Math.max(0, gameArea.clientWidth - itemWidth);
+    item.style.left = Math.random() * maxLeft + 'px';
+    item.style.top = '-50px';
 
     let pos = -50;
     const fall = setInterval(() => {
@@ -69,7 +115,7 @@ function createItem() {
             item.remove();
         }
 
-        if (pos > 480) { clearInterval(fall); item.remove(); }
+        if (pos > gameArea.clientHeight) { clearInterval(fall); item.remove(); }
     }, 20);
 }
 

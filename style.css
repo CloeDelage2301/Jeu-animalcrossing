@@ -1,3 +1,7 @@
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -5,18 +9,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   .game-area {
-    width: 20rem;
-    height: 30rem;
+    width: min(95vw, 20rem);
+    height: min(80vh, 30rem);
     background-color: #78c0d0;
     position: relative;
     overflow: hidden;
-    border: 0.5rem solid #fff;
+    border: 1rem solid #fff;
     border-radius: 1rem;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.8);
     cursor: none;
@@ -108,5 +112,63 @@
     background: #ffffff;
     border-radius: 1.5rem;
     cursor: pointer;
-   
+  }
+
+  .mobile-controls {
+    display: none;
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .mobile-btn {
+    flex: 1;
+    min-width: 5rem;
+    max-width: 10rem;
+    height: 4rem;
+    font-size: 1.8rem;
+    border: none;
+    border-radius: 1.2rem;
+    background: #f1c40f;
+    color: #000;
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .game-area {
+      width: min(95vw, 22rem);
+      height: min(75vh, 34rem);
+      border-width: 1rem;
+    }
+
+    .game-info {
+      padding: 0.8rem 0;
+      font-size: 0.95rem;
+    }
+
+    .net {
+      bottom: 1rem;
+      width: 5.5rem;
+    }
+
+    .mobile-controls {
+      display: flex;
+    }
+
+    .game-over {
+      padding: 0.8rem;
+    }
+
+    .promo-code {
+      font-size: 1.8rem;
+    }
   }
