@@ -75,7 +75,7 @@ function createItem() {
     if (!gameActive) return;
 
     const item = document.createElement('img');
-    const isClochette = Math.random() > 0.4; // Un peu plus de ruches pour le challenge
+    const isClochette = Math.random() > 0.4; 
     item.src = isClochette ? 'cochette.png' : 'ruche d abeille.png';
     item.className = 'item';
     gameArea.appendChild(item);
