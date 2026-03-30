@@ -123,4 +123,3 @@
         }
 
         setInterval(createItem, 1000); // Un peu plus lent (1000ms au lieu de 900ms)
-*
